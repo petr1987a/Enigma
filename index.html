@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Симулятор "Фиалка.js"</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="main-container">
+        <h1>Симулятор шифровальной машины «Фиалка.js»</h1>
+
+        <div class="enigma-machine">
+            
+            <div class="settings-panel">
+                <fieldset>
+                    <legend>Настройки роторов (положение)</legend>
+                    <div class="rotors-settings">
+                        <div class="rotor-control">
+                            <label for="rotor3_pos">Ротор III</label>
+                            <input type="text" id="rotor3_pos" class="rotor-display" value="А" maxlength="1">
+                        </div>
+                        <div class="rotor-control">
+                            <label for="rotor2_pos">Ротор II</label>
+                            <input type="text" id="rotor2_pos" class="rotor-display" value="А" maxlength="1">
+                        </div>
+                        <div class="rotor-control">
+                            <label for="rotor1_pos">Ротор I</label>
+                            <input type="text" id="rotor1_pos" class="rotor-display" value="А" maxlength="1">
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="lamp-panel" id="lamp-panel">
+                <!-- Лампочки будут сгенерированы JavaScript -->
+            </div>
+
+            <div class="keyboard" id="keyboard">
+                <!-- Клавиши будут сгенерированы JavaScript -->
+            </div>
+            
+            <div class="io-panel">
+                <textarea id="input-text" placeholder="Введите исходный текст здесь... (только кириллица)"></textarea>
+                <textarea id="output-text" placeholder="Результат шифрования..." readonly></textarea>
+            </div>
+            
+            <button id="reset-button">Сбросить</button>
+        </div>
+
+        <div class="credits">
+            <p>Логика и код: Биокиборг Лили</p>
+            <p>Стратегическое командование: Пётр</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
