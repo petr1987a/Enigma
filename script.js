@@ -11,18 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- ЭЛЕМЕНТЫ DOM ---
     const lampPanel = document.getElementById('lamp-panel');
     const keyboard = document.getElementById('keyboard');
-    const rotorInputs = {
-        1: document.getElementById('rotor1_pos'),
-        2: document.getElementById('rotor2_pos'),
-        3: document.getElementById('rotor3_pos'),
-    };
+    const rotorInputs = { 1: document.getElementById('rotor1_pos'), 2: document.getElementById('rotor2_pos'), 3: document.getElementById('rotor3_pos'), };
     const inputText = document.getElementById('input-text');
     const outputText = document.getElementById('output-text');
     const resetButton = document.getElementById('reset-button');
     const themeSwitcher = document.querySelector('.theme-switcher');
     const spaceKey = document.getElementById('key-space');
     const eraseKey = document.getElementById('key-erase');
-    const pasteButton = document.getElementById('paste-button'); // Новый элемент
+    const pasteButton = document.getElementById('paste-button');
 
     // --- СОСТОЯНИЕ МАШИНЫ ---
     let rotors = {
@@ -31,12 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         3: { pos: 0, config: ROTOR_CONFIGS.III, notch: ALPHABET.indexOf('Ц') }
     };
 
-    function initializeMachine() {
-        createInterface();
-        addEventListeners();
-        resetMachine();
-    }
-    
+    function initializeMachine() { createInterface(); addEventListeners(); resetMachine(); }
     function createInterface() {
         lampPanel.innerHTML = ''; keyboard.innerHTML = '';
         for (const letter of ALPHABET) {
@@ -44,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const key = document.createElement('button'); key.className = 'key'; key.id = `key-${letter}`; key.textContent = letter; keyboard.appendChild(key);
         }
     }
-
     function addEventListeners() {
         keyboard.addEventListener('click', e => { if (e.target.classList.contains('key')) handleKeyPress(e.target.textContent); });
         inputText.addEventListener('input', handleTextInput);
@@ -53,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         themeSwitcher.addEventListener('click', handleThemeSwitch);
         spaceKey.addEventListener('click', handleSpaceKey);
         eraseKey.addEventListener('click', handleEraseKey);
-        pasteButton.addEventListener('click', handlePasteKey); // Новый обработчик
+        pasteButton.addEventListener('click', handlePasteKey);
     }
     
     function handleRotorInputChange(e) {
@@ -66,12 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetMachine() { setInitialRotorPositions(); handleTextInput(); }
-
     function handleTextInput() {
         setInitialRotorPositions(); 
         let output = '';
         const cleanInput = (inputText.value || '').toUpperCase().replace(new RegExp(`[^${ALPHABET} ]`, 'g'), '');
-        
         for (const char of cleanInput) {
             if (char === ' ') { output += ' '; } 
             else { output += processLetter(char); }
@@ -85,33 +73,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const outputLetter = outputText.value.split(' ').join('').slice(-1);
         if (outputLetter) lightUpLamp(outputLetter);
     }
-    
     function handleThemeSwitch(e) {
         if (e.target.classList.contains('theme-button')) {
-            const theme = e.target.dataset.theme;
-            document.body.className = theme;
+            const theme = e.target.dataset.theme; document.body.className = theme;
             document.querySelector('.theme-button.active').classList.remove('active');
             e.target.classList.add('active');
         }
     }
-
     function handleSpaceKey() { inputText.value += ' '; inputText.dispatchEvent(new Event('input')); }
     function handleEraseKey() { inputText.value = inputText.value.slice(0, -1); inputText.dispatchEvent(new Event('input')); }
-    
-    // --- НАЧАЛО ИЗМЕНЕНИЯ: ФУНКЦИЯ ВСТАВКИ ---
     async function handlePasteKey() {
         try {
             const text = await navigator.clipboard.readText();
-            if (text) {
-                inputText.value = text;
-                inputText.dispatchEvent(new Event('input')); // Запускаем перешифровку
-            }
-        } catch (err) {
-            console.error('Не удалось прочитать буфер обмена:', err);
-            alert('Не удалось получить доступ к буферу обмена. Убедитесь, что вы предоставили разрешение.');
-        }
+            if (text) { inputText.value = text; inputText.dispatchEvent(new Event('input')); }
+        } catch (err) { console.error('Не удалось прочитать буфер обмена:', err); alert('Не удалось получить доступ к буферу обмена.'); }
     }
-    // --- КОНЕЦ ИЗМЕНЕНИЯ ---
 
     function processLetter(letter) {
         rotateRotors();
@@ -123,12 +99,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function rotateRotors() {
-        const r1_notch_before = rotors[1].pos === rotors[1].notch;
-        const r2_notch_before = rotors[2].pos === rotors[2].notch;
-        if (r1_notch_before || r2_notch_before) { // Улучшенный механизм двойного шага
-            if (r1_notch_before) rotors[2].pos = (rotors[2].pos + 1) % ALPHABET.length;
-            if (r2_notch_before) rotors[3].pos = (rotors[3].pos + 1) % ALPHABET.length;
+        const r1_at_notch_before = rotors[1].pos === rotors[1].notch;
+        const r2_at_notch_before = rotors[2].pos === rotors[2].notch;
+        
+        if (r1_at_notch_before || r2_at_notch_before) {
+            if (r1_at_notch_before) rotors[2].pos = (rotors[2].pos + 1) % ALPHABET.length;
+            if (r2_at_notch_before) rotors[3].pos = (rotors[3].pos + 1) % ALPHABET.length;
         }
+        
         rotors[1].pos = (rotors[1].pos + 1) % ALPHABET.length;
     }
     
