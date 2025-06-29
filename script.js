@@ -20,7 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const outputText = document.getElementById('output-text');
     const resetButton = document.getElementById('reset-button');
     const themeSwitcher = document.querySelector('.theme-switcher');
-    
+    const spaceKey = document.getElementById('key-space');
+    const eraseKey = document.getElementById('key-erase');
+    const pasteButton = document.getElementById('paste-button'); // Новый элемент
+
     // --- СОСТОЯНИЕ МАШИНЫ ---
     let rotors = {
         1: { pos: 0, config: ROTOR_CONFIGS.I,   notch: ALPHABET.indexOf('Е') },
@@ -37,12 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function createInterface() {
         lampPanel.innerHTML = ''; keyboard.innerHTML = '';
         for (const letter of ALPHABET) {
-            const lamp = document.createElement('div');
-            lamp.className = 'lamp'; lamp.id = `lamp-${letter}`; lamp.textContent = letter;
-            lampPanel.appendChild(lamp);
-            const key = document.createElement('button');
-            key.className = 'key'; key.id = `key-${letter}`; key.textContent = letter;
-            keyboard.appendChild(key);
+            const lamp = document.createElement('div'); lamp.className = 'lamp'; lamp.id = `lamp-${letter}`; lamp.textContent = letter; lampPanel.appendChild(lamp);
+            const key = document.createElement('button'); key.className = 'key'; key.id = `key-${letter}`; key.textContent = letter; keyboard.appendChild(key);
         }
     }
 
@@ -52,33 +51,30 @@ document.addEventListener('DOMContentLoaded', () => {
         resetButton.addEventListener('click', resetMachine);
         Object.values(rotorInputs).forEach(input => input.addEventListener('input', handleRotorInputChange));
         themeSwitcher.addEventListener('click', handleThemeSwitch);
+        spaceKey.addEventListener('click', handleSpaceKey);
+        eraseKey.addEventListener('click', handleEraseKey);
+        pasteButton.addEventListener('click', handlePasteKey); // Новый обработчик
     }
     
     function handleRotorInputChange(e) {
         let value = e.target.value.toUpperCase();
-        if (ALPHABET.includes(value)) {
-            resetMachine();
-        } else if (value !== '') {
-            // Если введено что-то не то, откатываем к предыдущему значению (или к 'А')
+        if (!ALPHABET.includes(value) && value !== '') {
             let rotorNum = Object.keys(rotorInputs).find(key => rotorInputs[key] === e.target);
             e.target.value = ALPHABET[rotors[rotorNum].pos] || 'А';
         }
+        resetMachine();
     }
 
-    function resetMachine() {
-        setInitialRotorPositions();
-        handleTextInput(); // Пересчитываем текст с новыми настройками
-    }
+    function resetMachine() { setInitialRotorPositions(); handleTextInput(); }
 
     function handleTextInput() {
         setInitialRotorPositions(); 
         let output = '';
-        const cleanInput = (inputText.value || '').toUpperCase().replace(new RegExp(`[^${ALPHABET}]`, 'g'), '');
+        const cleanInput = (inputText.value || '').toUpperCase().replace(new RegExp(`[^${ALPHABET} ]`, 'g'), '');
         
         for (const char of cleanInput) {
-            // Важно: создаем копию состояния роторов для каждого символа, т.к. processLetter их меняет
-            let currentRotorsState = JSON.parse(JSON.stringify(rotors)); 
-            output += processLetter(char);
+            if (char === ' ') { output += ' '; } 
+            else { output += processLetter(char); }
         }
         outputText.value = output;
     }
@@ -86,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleKeyPress(letter) {
         inputText.value += letter;
         inputText.dispatchEvent(new Event('input'));
-        const outputLetter = outputText.value.slice(-1);
+        const outputLetter = outputText.value.split(' ').join('').slice(-1);
         if (outputLetter) lightUpLamp(outputLetter);
     }
     
@@ -99,64 +95,56 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- ОСНОВНАЯ ЛОГИКА ШИФРОВАНИЯ ---
+    function handleSpaceKey() { inputText.value += ' '; inputText.dispatchEvent(new Event('input')); }
+    function handleEraseKey() { inputText.value = inputText.value.slice(0, -1); inputText.dispatchEvent(new Event('input')); }
+    
+    // --- НАЧАЛО ИЗМЕНЕНИЯ: ФУНКЦИЯ ВСТАВКИ ---
+    async function handlePasteKey() {
+        try {
+            const text = await navigator.clipboard.readText();
+            if (text) {
+                inputText.value = text;
+                inputText.dispatchEvent(new Event('input')); // Запускаем перешифровку
+            }
+        } catch (err) {
+            console.error('Не удалось прочитать буфер обмена:', err);
+            alert('Не удалось получить доступ к буферу обмена. Убедитесь, что вы предоставили разрешение.');
+        }
+    }
+    // --- КОНЕЦ ИЗМЕНЕНИЯ ---
+
     function processLetter(letter) {
-        // --- КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ ЛОГИКИ ---
-        // СНАЧАЛА шифруем, ПОТОМ вращаем.
+        rotateRotors();
         let index = ALPHABET.indexOf(letter);
-        
         index = rotorPass(index, 1, false); index = rotorPass(index, 2, false); index = rotorPass(index, 3, false);
         index = ALPHABET.indexOf(REFLECTOR_CONFIG[index]);
         index = rotorPass(index, 3, true); index = rotorPass(index, 2, true); index = rotorPass(index, 1, true);
-        
-        rotateRotors(); // Вращаем роторы ПОСЛЕ получения зашифрованной буквы
-
         return ALPHABET[index];
     }
     
     function rotateRotors() {
-        const r1_will_notch = rotors[1].pos === rotors[1].notch;
-        const r2_will_notch = rotors[2].pos === rotors[2].notch;
-
-        if (r1_will_notch) {
-            rotors[2].pos = (rotors[2].pos + 1) % ALPHABET.length;
+        const r1_notch_before = rotors[1].pos === rotors[1].notch;
+        const r2_notch_before = rotors[2].pos === rotors[2].notch;
+        if (r1_notch_before || r2_notch_before) { // Улучшенный механизм двойного шага
+            if (r1_notch_before) rotors[2].pos = (rotors[2].pos + 1) % ALPHABET.length;
+            if (r2_notch_before) rotors[3].pos = (rotors[3].pos + 1) % ALPHABET.length;
         }
-        if (r1_will_notch && r2_will_notch) { // Упрощенная, но рабочая модель "двойного шага"
-            rotors[3].pos = (rotors[3].pos + 1) % ALPHABET.length;
-        }
-
         rotors[1].pos = (rotors[1].pos + 1) % ALPHABET.length;
     }
     
     function rotorPass(index, rotorNum, isReverse) {
-        const rotor = rotors[rotorNum];
-        const shift = rotor.pos;
+        const rotor = rotors[rotorNum], shift = rotor.pos;
         let alphabet_index = (index + shift + ALPHABET.length) % ALPHABET.length;
-
         let char_after_wiring;
-        if (!isReverse) {
-            char_after_wiring = rotor.config[alphabet_index];
-        } else {
-            const inputChar = ALPHABET[alphabet_index];
-            char_after_wiring = ALPHABET[rotor.config.indexOf(inputChar)];
-        }
-        
+        if (!isReverse) { char_after_wiring = rotor.config[alphabet_index]; } 
+        else { const inputChar = ALPHABET[alphabet_index]; char_after_wiring = ALPHABET[rotor.config.indexOf(inputChar)]; }
         let final_index = ALPHABET.indexOf(char_after_wiring);
         return (final_index - shift + ALPHABET.length) % ALPHABET.length;
     }
 
-    // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
-    function lightUpLamp(letter) {
-        const lamp = document.getElementById(`lamp-${letter}`);
-        if(lamp) { lamp.classList.add('on'); setTimeout(() => lamp.classList.remove('on'), 300); }
-    }
-
-    function setInitialRotorPositions() {
-        Object.keys(rotorInputs).forEach(num => {
-            let value = rotorInputs[num].value.toUpperCase();
-            rotors[num].pos = ALPHABET.includes(value) ? ALPHABET.indexOf(value) : 0;
-        });
-    }
+    function lightUpLamp(letter) { const lamp = document.getElementById(`lamp-${letter}`); if(lamp) { lamp.classList.add('on'); setTimeout(() => lamp.classList.remove('on'), 300); } }
+    function setInitialRotorPositions() { Object.keys(rotorInputs).forEach(num => { let value = rotorInputs[num].value.toUpperCase(); rotors[num].pos = ALPHABET.includes(value) ? ALPHABET.indexOf(value) : 0; }); updateRotorDisplays(); }
+    function updateRotorDisplays() { Object.keys(rotors).forEach(num => { rotorInputs[num].value = ALPHABET[rotors[num].pos]; }); }
     
     initializeMachine();
 });
