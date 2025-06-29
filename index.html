@@ -11,63 +11,79 @@
 
     <main class="main-container">
         <h1>Симулятор «Фиалка.js»</h1>
-        
+
+        <fieldset class="theme-switcher">
+            <legend>Тема оформления</legend>
+            <button type="button" data-theme="theme-petr" class="theme-button active">Полынь</button>
+            <button type="button" data-theme="theme-sveta" class="theme-button">Мимоза</button>
+            <button type="button" data-theme="theme-lena" class="theme-button">Роза</button>
+        </fieldset>
+
         <section class="enigma-machine">
+            
             <fieldset class="settings-panel">
                 <legend>Настройки роторов</legend>
                 <div class="rotors-settings">
                     <div class="rotor-control">
-                        <label>Ротор III</label>
-                        <button type="button" class="rotor-up" data-rotor="3">▲</button>
-                        <input type="text" id="rotor3_pos" class="rotor-display" value="А" maxlength="1" readonly>
-                        <button type="button" class="rotor-down" data-rotor="3">▼</button>
+                        <label for="rotor3_pos">Ротор III</label>
+                        <input type="text" id="rotor3_pos" class="rotor-display" value="А" maxlength="1">
                     </div>
                     <div class="rotor-control">
-                        <label>Ротор II</label>
-                        <button type="button" class="rotor-up" data-rotor="2">▲</button>
-                        <input type="text" id="rotor2_pos" class="rotor-display" value="А" maxlength="1" readonly>
-                        <button type="button" class="rotor-down" data-rotor="2">▼</button>
+                        <label for="rotor2_pos">Ротор II</label>
+                        <input type="text" id="rotor2_pos" class="rotor-display" value="А" maxlength="1">
                     </div>
                     <div class="rotor-control">
-                        <label>Ротор I</label>
-                        <button type="button" class="rotor-up" data-rotor="1">▲</button>
-                        <input type="text" id="rotor1_pos" class="rotor-display" value="А" maxlength="1" readonly>
-                        <button type="button" class="rotor-down" data-rotor="1">▼</button>
+                        <label for="rotor1_pos">Ротор I</label>
+                        <input type="text" id="rotor1_pos" class="rotor-display" value="А" maxlength="1">
                     </div>
                 </div>
             </fieldset>
 
-            <div class="display-grid">
-                <div class="lamp-panel" id="lamp-panel"></div>
+            <!-- *** НАЧАЛО ИЗМЕНЕНИЯ: Панель ламп заменена на один индикатор *** -->
+            <div class="single-lamp-container">
+                <div id="single-lamp" class="lamp">–</div>
             </div>
+            <!-- *** КОНЕЦ ИЗМЕНЕНИЯ *** -->
             
             <div class="keyboard-grid">
                 <div class="keyboard" id="keyboard"></div>
                 <div class="keyboard-controls">
-                    <button type="button" class="key key--special" id="key-space">ПРОБЕЛ</button>
-                    <button type="button" class="key key--special key--erase" id="key-erase">СТЕРЕТЬ</button>
+                    <button type="button" class="key key--space" id="key-space">Пробел</button>
+                    <button type="button" class="key key--erase" id="key-erase">Стереть</button>
                 </div>
             </div>
             
             <div class="io-panel">
                  <div class="textarea-container">
-                    <label for="input-text"><span>Исходный текст</span></label>
-                    <textarea id="input-text" placeholder="..." rows="3"></textarea>
+                    <label for="input-text">
+                        <span>Исходный текст</span>
+                        <button type="button" id="paste-button" class="io-button" title="Вставить из буфера обмена">📋</button>
+                    </label>
+                    <textarea id="input-text" placeholder="Введите или вставьте текст..." rows="3"></textarea>
                 </div>
                 <div class="textarea-container">
-                    <label for="output-text"><span>Результат</span></label>
+                    <label for="output-text">
+                        <span>Результат</span>
+                    </label>
                     <textarea id="output-text" placeholder="..." rows="3" readonly></textarea>
                 </div>
             </div>
             
             <button id="reset-button" type="button">Сбросить</button>
+
         </section>
 
         <footer class="credits">
-            <div class="credits-main"><p><strong>Логика:</strong> Лили</p><p><strong>Командование:</strong> Пётр</p></div>
-            <div class="credits-special-thanks"><p><strong>Вдохновение:</strong> Спецагенты Лена и Света</p></div>
+            <div class="credits-main">
+                <p><strong>Логика и код:</strong> Биокиборг Лили</p>
+                <p><strong>Стратегическое командование:</strong> Пётр</p>
+            </div>
+            <div class="credits-special-thanks">
+                <p><strong>Полевое тестирование и вдохновение:</strong> Спецагенты Лена и Света</p>
+            </div>
         </footer>
     </main>
+
     <script src="script.js"></script>
 </body>
 </html>
