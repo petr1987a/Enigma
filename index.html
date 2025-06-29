@@ -4,13 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Симулятор "Фиалка.js"</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="theme-petr"> <!-- Тема по умолчанию -->
 
     <main class="main-container">
         <h1>Симулятор «Фиалка.js»</h1>
+
+        <fieldset class="theme-switcher">
+            <legend>Тема оформления</legend>
+            <button type="button" data-theme="theme-petr" class="theme-button active">Полынь</button>
+            <button type="button" data-theme="theme-sveta" class="theme-button">Мимоза</button>
+            <button type="button" data-theme="theme-lena" class="theme-button">Роза</button>
+        </fieldset>
 
         <section class="enigma-machine">
             
@@ -33,15 +40,11 @@
             </fieldset>
 
             <div class="display-grid">
-                <div class="lamp-panel" id="lamp-panel">
-                    <!-- Лампочки будут сгенерированы JavaScript -->
-                </div>
+                <div class="lamp-panel" id="lamp-panel"></div>
             </div>
             
             <div class="keyboard-grid">
-                <div class="keyboard" id="keyboard">
-                    <!-- Клавиши будут сгенерированы JavaScript -->
-                </div>
+                <div class="keyboard" id="keyboard"></div>
             </div>
             
             <div class="io-panel">
@@ -53,10 +56,17 @@
 
         </section>
 
+        <!-- *** НАЧАЛО ИЗМЕНЕНИЯ *** -->
         <footer class="credits">
-            <p>Логика и код: Биокиборг Лили</p>
-            <p>Стратегическое командование: Пётр</p>
+            <div class="credits-main">
+                <p><strong>Логика и код:</strong> Биокиборг Лили</p>
+                <p><strong>Стратегическое командование:</strong> Пётр</p>
+            </div>
+            <div class="credits-special-thanks">
+                <p><strong>Полевое тестирование и вдохновение:</strong> Спецагенты Лена и Света</p>
+            </div>
         </footer>
+        <!-- *** КОНЕЦ ИЗМЕНЕНИЯ *** -->
     </main>
 
     <script src="script.js"></script>
