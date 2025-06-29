@@ -11,23 +11,29 @@
 
     <main class="main-container">
         <h1>Симулятор «Фиалка.js»</h1>
-
-        <fieldset class="theme-switcher">
-            <legend>Тема оформления</legend>
-            <div class="theme-buttons-container">
-                <button type="button" data-theme="theme-petr" class="theme-button active">Полынь</button>
-                <button type="button" data-theme="theme-sveta" class="theme-button">Мимоза</button>
-                <button type="button" data-theme="theme-lena" class="theme-button">Роза</button>
-            </div>
-        </fieldset>
-
+        
         <section class="enigma-machine">
             <fieldset class="settings-panel">
                 <legend>Настройки роторов</legend>
                 <div class="rotors-settings">
-                    <div class="rotor-control"><label>Ротор III</label><input type="text" id="rotor3_pos" class="rotor-display" value="А" maxlength="1"></div>
-                    <div class="rotor-control"><label>Ротор II</label><input type="text" id="rotor2_pos" class="rotor-display" value="А" maxlength="1"></div>
-                    <div class="rotor-control"><label>Ротор I</label><input type="text" id="rotor1_pos" class="rotor-display" value="А" maxlength="1"></div>
+                    <div class="rotor-control">
+                        <label>Ротор III</label>
+                        <button type="button" class="rotor-up" data-rotor="3">▲</button>
+                        <input type="text" id="rotor3_pos" class="rotor-display" value="А" maxlength="1" readonly>
+                        <button type="button" class="rotor-down" data-rotor="3">▼</button>
+                    </div>
+                    <div class="rotor-control">
+                        <label>Ротор II</label>
+                        <button type="button" class="rotor-up" data-rotor="2">▲</button>
+                        <input type="text" id="rotor2_pos" class="rotor-display" value="А" maxlength="1" readonly>
+                        <button type="button" class="rotor-down" data-rotor="2">▼</button>
+                    </div>
+                    <div class="rotor-control">
+                        <label>Ротор I</label>
+                        <button type="button" class="rotor-up" data-rotor="1">▲</button>
+                        <input type="text" id="rotor1_pos" class="rotor-display" value="А" maxlength="1" readonly>
+                        <button type="button" class="rotor-down" data-rotor="1">▼</button>
+                    </div>
                 </div>
             </fieldset>
 
@@ -45,7 +51,7 @@
             
             <div class="io-panel">
                  <div class="textarea-container">
-                    <label for="input-text"><span>Исходный текст</span><button type="button" id="paste-button" class="io-button" title="Вставить">📋</button></label>
+                    <label for="input-text"><span>Исходный текст</span></label>
                     <textarea id="input-text" placeholder="..." rows="3"></textarea>
                 </div>
                 <div class="textarea-container">
