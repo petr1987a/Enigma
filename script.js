@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             else { output += processLetter(char); }
         }
         outputText.value = output;
+        updateRotorDisplays(); // магия!
     }
 
     function handleKeyPress(letter) {
@@ -72,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         inputText.dispatchEvent(new Event('input'));
         const outputLetter = outputText.value.split(' ').join('').slice(-1);
         if (outputLetter) lightUpLamp(outputLetter);
+        updateRotorDisplays(); // магия!
     }
     function handleThemeSwitch(e) {
         if (e.target.classList.contains('theme-button')) {
@@ -120,9 +122,41 @@ document.addEventListener('DOMContentLoaded', () => {
         return (final_index - shift + ALPHABET.length) % ALPHABET.length;
     }
 
-    function lightUpLamp(letter) { const lamp = document.getElementById(`lamp-${letter}`); if(lamp) { lamp.classList.add('on'); setTimeout(() => lamp.classList.remove('on'), 300); } }
-    function setInitialRotorPositions() { Object.keys(rotorInputs).forEach(num => { let value = rotorInputs[num].value.toUpperCase(); rotors[num].pos = ALPHABET.includes(value) ? ALPHABET.indexOf(value) : 0; }); updateRotorDisplays(); }
-    function updateRotorDisplays() { Object.keys(rotors).forEach(num => { rotorInputs[num].value = ALPHABET[rotors[num].pos]; }); }
+    function lightUpLamp(letter) { 
+        const lamp = document.getElementById(`lamp-${letter}`); 
+        if(lamp) { 
+            lamp.classList.remove('on'); // сбрасываем, если кто-то не досветился
+            // Трюк для перезапуска анимации
+            void lamp.offsetWidth;
+            lamp.classList.add('on'); 
+            setTimeout(() => lamp.classList.remove('on'), 350); 
+        } 
+    }
+
+    function setInitialRotorPositions() { 
+        Object.keys(rotorInputs).forEach(num => { 
+            let value = rotorInputs[num].value.toUpperCase(); 
+            rotors[num].pos = ALPHABET.includes(value) ? ALPHABET.indexOf(value) : 0; 
+        }); 
+    }
+
+    // магия вращения — анимируем input'ы роторов
+    function animateRotor(rotorNum) {
+        const input = rotorInputs[rotorNum];
+        input.classList.remove('rotor-spin');
+        void input.offsetWidth;
+        input.classList.add('rotor-spin');
+    }
+
+    function updateRotorDisplays() {
+        Object.keys(rotors).forEach(num => {
+            let input = rotorInputs[num];
+            let prevValue = input.value;
+            let newValue = ALPHABET[rotors[num].pos];
+            input.value = newValue;
+            if (prevValue !== newValue) animateRotor(num);
+        });
+    }
     
     initializeMachine();
 });

@@ -1,13 +1,201 @@
-:root { --bg-color: #2a2a2a; --text-color: #E0E0E0; --case-color-1: #5a5a5a; --case-color-2: #7a7a7a; --panel-color: #3D3D3D; --key-color: #2C2C2C; --lamp-off-color: #222; --lamp-off-text: #555; --lamp-on-color: #9EFF00; --lamp-on-text: #000; --header-color: #9EFF00; --reset-bg: #5a2d2d; --reset-border: #4a1d1d; --active-theme-bg: #9EFF00; --active-theme-text: #000; --border-color: #1a1a1a; --key-shadow: #1a1a1a; }
-body.theme-sveta { --bg-color: #FDF3E0; --text-color: #3D3522; --case-color-1: #ffffff; --case-color-2: #f0f0f0; --panel-color: #EFE8D8; --key-color: #ffffff; --lamp-off-color: #D3CBBF; --lamp-off-text: #827b6d; --lamp-on-color: #FF6B6B; --lamp-on-text: #fff; --header-color: #FF6B6B; --reset-bg: #FFB5B5; --reset-border: #FF6B6B; --active-theme-bg: #FF6B6B; --active-theme-text: #fff; --border-color: #d1d1d1; --key-shadow: #b0b0b0; }
-body.theme-lena { --bg-color: #3E2C41; --text-color: #F1D4D4; --case-color-1: #735D78; --case-color-2: #9a829e; --panel-color: #554257; --key-color: #D4B9B2; --lamp-off-color: #49334b; --lamp-off-text: #896b8b; --lamp-on-color: #FF9B9B; --lamp-on-text: #3E2C41; --header-color: #FF9B9B; --reset-bg: #A85757; --reset-border: #804343; --active-theme-bg: #FF9B9B; --active-theme-text: #3E2C41; --border-color: #2b1d2d; --key-shadow: #2b1d2d; }
+:root { --bg-color: #2a2a2a; --text-color: #E0E0E0; --case-color-1: #5a5a5a; --case-color-2: #7a7a7a; --panel-color: #3D3D3D; --key-color: #2C2C2C; --lamp-off-color: #222; --lamp-off-text: #555; --lamp-on-color: #faffc7; --lamp-glow1: #c2fffa; --lamp-glow2: #7be0fc99; --header-color: #F5D06F; }
+body.theme-sveta { --bg-color: #FDF3E0; --text-color: #3D3522; --case-color-1: #ffffff; --case-color-2: #f0f0f0; --panel-color: #EFE8D8; --key-color: #ffffff; --lamp-off-color: #D3CBBF; --lamp-off-text: #B09C7A; --lamp-on-color: #ffd6e0; --lamp-glow1: #fffae0; --lamp-glow2: #ffd6e0cc; --header-color: #F3AC6C; }
+body.theme-lena { --bg-color: #3E2C41; --text-color: #F1D4D4; --case-color-1: #735D78; --case-color-2: #9a829e; --panel-color: #554257; --key-color: #D4B9B2; --lamp-off-color: #49334b; --lamp-off-text: #ab7b7b; --lamp-on-color: #f2c6de; --lamp-glow1: #b5ead7; --lamp-glow2: #e4bad4cc; --header-color: #F67280; }
 
 html { box-sizing: border-box; font-size: 16px; }
 *, *:before, *:after { box-sizing: inherit; }
-body { font-family: 'Roboto Mono', monospace; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; margin: 0; padding: 0.5rem; }
+body { font-family: 'Roboto Mono', monospace; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; margin: 0; }
 .main-container { width: 100%; max-width: 900px; text-align: center; }
-h1 { font-family: 'Playfair Display', serif; text-transform: uppercase; color: var(--header-color); text-shadow: 0 0 5px var(--header-color); margin: 0 0 1rem 0; font-size: clamp(1.5rem, 5vw, 2.2rem); }
+h1 { font-family: 'Playfair Display', serif; text-transform: uppercase; color: var(--header-color); text-shadow: 0 0 5px var(--header-color); margin: 0 0 1rem 0; font-size: clamp(1.5rem, 5vw, 2.2rem); letter-spacing: 0.06em; }
 
-.theme-switcher { border: 2px solid var(--panel-color); border-radius: 8px; padding: 0.6rem; margin-bottom: 1rem; }
-.theme-switcher legend { font-weight: bold; padding: 0 0.6rem; color: var(--header-color); margin: 0 auto; }
-.theme-buttons-container { display: flex; flex-wrap: wrap; justify
+/* --- Клавиатура и лампы --- */
+.lamp-panel {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 0.5em;
+}
+
+.lamp {
+    font-size: 1.2rem;
+    width: 2.1em;
+    height: 2.1em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--lamp-off-color);
+    border-radius: 50%;
+    color: var(--lamp-off-text);
+    margin: 2px;
+    box-shadow: 0 0 0 0 rgba(66,172,255,0);
+    transition: background 0.2s, color 0.2s, box-shadow 0.3s;
+}
+.lamp.on {
+    background: var(--lamp-on-color);
+    color: #222;
+    box-shadow: 0 0 18px 6px var(--lamp-glow1), 0 0 38px 18px var(--lamp-glow2);
+    animation: magic-glow 0.5s cubic-bezier(.7,-0.5,.7,2.4) 1;
+}
+@keyframes magic-glow {
+    0% { box-shadow: 0 0 0 0 #f8f7a7; background: #fffbe0; }
+    60% { box-shadow: 0 0 35px 17px #b6ffe4, 0 0 10px 3px #ffb6fc; }
+    100% { box-shadow: 0 0 18px 6px var(--lamp-glow1), 0 0 38px 18px var(--lamp-glow2); background: var(--lamp-on-color);}
+}
+
+/* --- Клавиши --- */
+.keyboard-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1em;
+}
+.keyboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3px;
+    margin-bottom: 0.35em;
+}
+.key {
+    font-size: 1.08rem;
+    width: 2.2em;
+    height: 2.2em;
+    border-radius: 7px;
+    border: none;
+    background: var(--key-color);
+    color: var(--text-color);
+    margin: 1px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 7px 0 #0003;
+    outline: none;
+}
+.key:active { background: var(--panel-color); color: var(--header-color); }
+.key--special { min-width: 80px; margin-left: 6px; }
+.key--erase { background: #c22c2c; color: #fff8; }
+
+/* --- РОТОРЫ --- */
+.settings-panel {
+    border: 2px solid var(--panel-color);
+    border-radius: 8px;
+    padding: 0.6rem;
+    margin-bottom: 1.2rem;
+}
+.settings-panel legend {
+    font-weight: bold;
+    padding: 0 0.6rem;
+    color: var(--header-color);
+    margin: 0 auto;
+}
+.rotors-settings {
+    display: flex;
+    justify-content: center;
+    gap: 2.5em;
+    margin-bottom: 0;
+}
+.rotor-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2em;
+}
+.rotor-control label {
+    margin-bottom: 0.2em;
+    font-size: 1.05em;
+    color: var(--lamp-glow1);
+}
+.rotor-display {
+    font-size: 2rem;
+    width: 2.5em;
+    text-align: center;
+    border: 2px solid var(--panel-color);
+    border-radius: 7px;
+    background: var(--case-color-2);
+    color: var(--text-color);
+    transition: box-shadow 0.2s;
+    box-shadow: 0 0 12px 0 rgba(120,200,255,0.14);
+    animation: none;
+}
+.rotor-display.rotor-spin {
+    animation: rotor-spin 0.4s cubic-bezier(.52,-0.3,.46,1.38) 1;
+}
+@keyframes rotor-spin {
+    0% { transform: rotateX(0deg) scale(1); }
+    40% { transform: rotateX(90deg) scale(1.1); }
+    60% { transform: rotateX(270deg) scale(1.1); }
+    100% { transform: rotateX(360deg) scale(1); }
+}
+
+/* --- Панель ввода/вывода --- */
+.io-panel {
+    display: flex;
+    justify-content: center;
+    gap: 2.5em;
+    margin: 1.5em 0 1em 0;
+}
+.textarea-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2em;
+}
+.textarea-container label {
+    font-size: 1em;
+    margin-bottom: 0.2em;
+    color: var(--header-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+textarea {
+    font-family: inherit;
+    font-size: 1.1em;
+    min-width: 160px;
+    max-width: 320px;
+    min-height: 2em;
+    max-height: 8em;
+    padding: 0.5em;
+    border: 2px solid var(--panel-color);
+    border-radius: 6px;
+    background: var(--case-color-2);
+    color: var(--text-color);
+    resize: vertical;
+}
+.io-button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1.12em;
+    color: var(--header-color);
+    margin-left: 0.2em;
+    transition: color 0.2s;
+}
+.io-button:active { color: var(--lamp-glow1); }
+
+/* --- Общие элементы --- */
+button { font-family: inherit; }
+button:focus, input:focus, textarea:focus { outline: 2px solid var(--header-color); outline-offset: 2px; }
+
+#reset-button {
+    margin-top: 1.2em;
+    padding: 0.5em 2em;
+    font-size: 1.1em;
+    border-radius: 7px;
+    border: none;
+    background: var(--panel-color);
+    color: var(--header-color);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+#reset-button:active { background: var(--header-color); color: var(--panel-color); }
+
+.credits { margin-top: 2em; font-size: 1em; color: var(--lamp-off-text); }
+.credits-main { margin-bottom: 0.3em; }
+.credits-special-thanks { font-size: 0.92em; }
+
+@media (max-width: 700px) {
+    .main-container { max-width: 99vw; }
+    .io-panel { flex-direction: column; gap: 1em; }
+    .rotors-settings { gap: 1em; }
+}
