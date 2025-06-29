@@ -9,52 +9,55 @@
 </head>
 <body>
 
-    <div class="main-container">
-        <h1>Симулятор шифровальной машины «Фиалка.js»</h1>
+    <main class="main-container">
+        <h1>Симулятор «Фиалка.js»</h1>
 
-        <div class="enigma-machine">
+        <section class="enigma-machine">
             
-            <div class="settings-panel">
-                <fieldset>
-                    <legend>Настройки роторов (положение)</legend>
-                    <div class="rotors-settings">
-                        <div class="rotor-control">
-                            <label for="rotor3_pos">Ротор III</label>
-                            <input type="text" id="rotor3_pos" class="rotor-display" value="А" maxlength="1">
-                        </div>
-                        <div class="rotor-control">
-                            <label for="rotor2_pos">Ротор II</label>
-                            <input type="text" id="rotor2_pos" class="rotor-display" value="А" maxlength="1">
-                        </div>
-                        <div class="rotor-control">
-                            <label for="rotor1_pos">Ротор I</label>
-                            <input type="text" id="rotor1_pos" class="rotor-display" value="А" maxlength="1">
-                        </div>
+            <fieldset class="settings-panel">
+                <legend>Настройки роторов</legend>
+                <div class="rotors-settings">
+                    <div class="rotor-control">
+                        <label for="rotor3_pos">Ротор III</label>
+                        <input type="text" id="rotor3_pos" class="rotor-display" value="А" maxlength="1">
                     </div>
-                </fieldset>
-            </div>
+                    <div class="rotor-control">
+                        <label for="rotor2_pos">Ротор II</label>
+                        <input type="text" id="rotor2_pos" class="rotor-display" value="А" maxlength="1">
+                    </div>
+                    <div class="rotor-control">
+                        <label for="rotor1_pos">Ротор I</label>
+                        <input type="text" id="rotor1_pos" class="rotor-display" value="А" maxlength="1">
+                    </div>
+                </div>
+            </fieldset>
 
-            <div class="lamp-panel" id="lamp-panel">
-                <!-- Лампочки будут сгенерированы JavaScript -->
+            <div class="display-grid">
+                <div class="lamp-panel" id="lamp-panel">
+                    <!-- Лампочки будут сгенерированы JavaScript -->
+                </div>
             </div>
-
-            <div class="keyboard" id="keyboard">
-                <!-- Клавиши будут сгенерированы JavaScript -->
+            
+            <div class="keyboard-grid">
+                <div class="keyboard" id="keyboard">
+                    <!-- Клавиши будут сгенерированы JavaScript -->
+                </div>
             </div>
             
             <div class="io-panel">
-                <textarea id="input-text" placeholder="Введите исходный текст здесь... (только кириллица)"></textarea>
-                <textarea id="output-text" placeholder="Результат шифрования..." readonly></textarea>
+                <textarea id="input-text" placeholder="Исходный текст..." rows="3"></textarea>
+                <textarea id="output-text" placeholder="Результат..." rows="3" readonly></textarea>
             </div>
             
-            <button id="reset-button">Сбросить</button>
-        </div>
+            <button id="reset-button" type="button">Сбросить</button>
 
-        <div class="credits">
+        </section>
+
+        <footer class="credits">
             <p>Логика и код: Биокиборг Лили</p>
             <p>Стратегическое командование: Пётр</p>
-        </div>
-    </div>
+        </footer>
+    </main>
 
     <script src="script.js"></script>
 </body>
