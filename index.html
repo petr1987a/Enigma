@@ -45,12 +45,29 @@
             
             <div class="keyboard-grid">
                 <div class="keyboard" id="keyboard"></div>
+                <div class="keyboard-controls">
+                    <button type="button" class="key key--space" id="key-space">Пробел</button>
+                    <button type="button" class="key key--erase" id="key-erase">Стереть</button>
+                </div>
             </div>
             
+            <!-- *** НАЧАЛО ИЗМЕНЕНИЯ *** -->
             <div class="io-panel">
-                <textarea id="input-text" placeholder="Исходный текст..." rows="3"></textarea>
-                <textarea id="output-text" placeholder="Результат..." rows="3" readonly></textarea>
+                 <div class="textarea-container">
+                    <label for="input-text">
+                        <span>Исходный текст</span>
+                        <button type="button" id="paste-button" class="io-button" title="Вставить из буфера обмена">📋</button>
+                    </label>
+                    <textarea id="input-text" placeholder="Введите или вставьте текст..." rows="3"></textarea>
+                </div>
+                <div class="textarea-container">
+                    <label for="output-text">
+                        <span>Результат</span>
+                    </label>
+                    <textarea id="output-text" placeholder="..." rows="3" readonly></textarea>
+                </div>
             </div>
+            <!-- *** КОНЕЦ ИЗМЕНЕНИЯ *** -->
             
             <button id="reset-button" type="button">Сбросить</button>
 
